@@ -1,34 +1,27 @@
 import * as http from 'axios';
-import endpoints from '../const/endpoints';
+import * as Endpoints from '../const/endpoints';
 import _ from 'lodash';
 
-export function requestData( requestType, path, data, customHeaders, sendResponseObject, isFile) {
+export function requestData(requestType, path, data, sendResponseObject, token) {
+	let headers={};
+	headers = token ?
+	{
+		"Content-Type":"application/json",
+		"Authorization": "Bearer " + token,
 
-	var headers = {
-		Authorization: "Bearer ", //getToken(),
-		"Api-Version": "2.0",
-		"Content-Type": "application/json",
-		"Cache-Control": "no-cache",
-		"If-Modified-Since" : "0"
-	};
-	if (headers !== undefined) {
-		headers = _.merge(headers, customHeaders);
-	}
+	} : {"Content-Type":"application/json"}
+
 	return new Promise((resolve, reject) => {
 		http({
 			url: path,
-			baseURL:endpoints.endpoints.baseURL,
+			baseURL:Endpoints.baseUrl,
 			headers: headers,
 			method: requestType,
 			data: data,
-			responseType: isFile ? "blob" : "json"
+			responseType: "json"
 		})
 			.then(response => {
-				if (typeof sendResponseObject === "undefined" || !sendResponseObject) {
-					resolve(response.data);
-				} else {
-					resolve(response);
-				}
+				resolve(response)
 			})
 			.catch(error => {
 				console.error(error); // For example when QueryService is unavailable (HTTP 503), error.response=null
