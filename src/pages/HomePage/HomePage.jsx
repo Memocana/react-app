@@ -1,19 +1,33 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
+import HeaderMenu from '../../components/HeaderMenu';
+import _ from 'lodash';
 
 class HomePage extends Component {
   render() {
     return (
-		<div className="App">
-        <header className="App-header">
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
+			<div className="page-container">
+				<HeaderMenu
+					userName={_.get(this.props,"user.firstname") ? this.props.user.firstname : ""}
+					pathName={this.props.location.pathname}
+					redirect={(path)=>{this.props.history.push(path)}}  />
+					<div className="page-content">
+						<h3>
+							TEST HOME PAGE
+						</h3>
+				</div>
     </div>
     );
   }
 }
 
-export default withRouter(HomePage);
+const mapStateToProps = (state) => {
+	return {
+		user: state.login.user,
+	};
+};
+
+export default withRouter(
+	connect(mapStateToProps)(HomePage)
+);

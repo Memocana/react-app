@@ -1,6 +1,5 @@
 import * as http from 'axios';
 import * as Endpoints from '../const/endpoints';
-import _ from 'lodash';
 
 export function requestData(requestType, path, data, sendResponseObject, token) {
 	let headers={};

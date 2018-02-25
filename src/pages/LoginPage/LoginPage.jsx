@@ -41,7 +41,7 @@ class LoginPage extends Component {
 		this.props.history.push('./home')
 	}
     return (
-		<div>
+		<div className="page-container">
 			<Login
 				login={this.login}
 				homes={this.props.allHouses}

@@ -16,7 +16,7 @@ body {
 
 .page-container {
 	width: 100%;
-	height: 100%;
+	height: -webkit-fill-available;
 	margin: auto;
 	position: relative;
 }
@@ -216,7 +216,7 @@ body {
 	.page-container .navigation-links .navigation-links-inner .navigation-link .icon {
 		margin-right: 0px;
 	}
-	.page-container .navigation-links .navigation-links-inner .navigation-link .label {
+	.page-container .navigation-links .navigation-links-inner .navigation-link .header-label {
 		display: none;
 	}
 }
