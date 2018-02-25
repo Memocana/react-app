@@ -1,5 +1,6 @@
 import React  from 'react';
 import PropTypes from 'prop-types';
+import { CircleLoader } from 'react-spinners';
 
  const  Login = (props) => {
 	return(
@@ -12,15 +13,34 @@ import PropTypes from 'prop-types';
 			ev idaresi uygulaması
 		</div>
 		<div className="login-form">
-			<input className="common-input" type="text" value={props.name} placeholder="Ad" name='name' onChange={(e)=>{props.handleChange("name",e.target.value)}} />
-			<input className="common-input" type="text" value={props.surname} placeholder="Soyad" name='surName' onChange={(e)=>{props.handleChange("surName",e.target.value)}} />
-			<select onChange={(e)=>{props.handleChange("selectedHome",e.target.value)}} className="common-input">{!props.selectedHome.id ?
+			<div className="loader-container">
+				<CircleLoader
+						color={'#123abc'}
+						loading={props.loadingState}
+						margin="auto"
+				/>
+			</div>
+			<input className={props.validate && !props.name ? "common-input-error" : "common-input" } type="text" value={props.name} placeholder="Ad" name='name' onChange={(e)=>{props.handleChange("name",e.target.value)}} />
+			{
+				props.validate && !props.name &&
+        		<div className="help-block">İsim girmelisiniz !</div>
+            }
+			<input className={props.validate && !props.surName ? "common-input-error" : "common-input" } type="text" value={props.surname} placeholder="Soyad" name='surName' onChange={(e)=>{props.handleChange("surName",e.target.value)}} />
+			{
+				props.validate && !props.surName &&
+        		<div className="help-block">Soyisim seçmelisiniz ve en az 6 karakter olmalıdır !</div>
+            }
+			<select onChange={(e)=>{props.handleChange("selectedHome",e.target.value)}} className={props.validate && !props.selectedHome ? "common-input-error" : "common-input" }>{!props.selectedHome ?
 			<option selected disabled>Ev Seçiniz</option>
 			: null}
 				{props.homes.map((home)=>{
 					return <option selected={props.selectedHome.id===home.id} value={home.id}>{home.name}</option>
 				})}
 			</select>
+			{
+				props.validate && !props.selectedHome &&
+        		<div className="help-block">Ev seçmelisiniz !</div>
+            }
 			<div className="login-button-container">
 				<button onClick={props.login} className="login-button">GİRİŞ</button>
 			</div>

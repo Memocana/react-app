@@ -2,9 +2,6 @@ import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 
 class HomePage extends Component {
-	redirectHome=()=>{
-		this.props.history.push('./login');
-	}
   render() {
     return (
 		<div className="App">
@@ -14,8 +11,7 @@ class HomePage extends Component {
         <p className="App-intro">
           To get started, edit <code>src/App.js</code> and save to reload.
         </p>
-		<button onClick={this.redirectHome} >Redirect</button>
-      </div>
+    </div>
     );
   }
 }
