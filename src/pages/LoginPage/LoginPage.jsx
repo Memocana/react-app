@@ -51,7 +51,7 @@ class LoginPage extends Component {
 				selectedHome={this.state.selectedHome}
 				loadingState={this.props.inProgressGetHouses || this.props.inProgressLogin}
 				validate={this.state.validation} />
-			);
+
 			<GeneralErrorModal show={this.props.error.status ? this.props.error.status : false}
 				title={"Hata Oluştu !"} body={this.props.error.message}
 				handleClose={()=>this.props.closeErrorModal()} />

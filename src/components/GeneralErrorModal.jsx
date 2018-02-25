@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Modal, Button } from 'react-bootstrap';
 
  const  GeneralErrorModal = (props) => {
-	return(<div>
+	return<div>
 	<Modal dialogClassName="static-modal" show={props.show} onHide={props.handleClose}>
 		<Modal.Dialog>
 		<Modal.Header>
@@ -17,7 +17,7 @@ import { Modal, Button } from 'react-bootstrap';
 		</Modal.Footer>
 		</Modal.Dialog>
 	</Modal>
-  </div>);
+  </div>;
 }
 GeneralErrorModal.propTypes={
 	show:PropTypes.bool,
