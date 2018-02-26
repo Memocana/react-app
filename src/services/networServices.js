@@ -1,12 +1,12 @@
 import * as http from 'axios';
 import * as Endpoints from '../const/endpoints';
 
-export function requestData(requestType, path, data, sendResponseObject, token) {
+export function requestData(requestType, path, data, token) {
 	let headers={};
 	headers = token ?
 	{
 		"Content-Type":"application/json",
-		"Authorization": "Bearer " + token,
+		"Authorization": token,
 
 	} : {"Content-Type":"application/json"}
 

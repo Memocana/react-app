@@ -33,8 +33,8 @@ import { CircleLoader } from 'react-spinners';
 			<select onChange={(e)=>{props.handleChange("selectedHome",e.target.value)}} className={props.validate && !props.selectedHome ? "common-input-error" : "common-input" }>{!props.selectedHome ?
 			<option selected disabled>Ev Seçiniz</option>
 			: null}
-				{props.homes.map((home)=>{
-					return <option selected={props.selectedHome.id===home.id} value={home.id}>{home.name}</option>
+				{props.homes.map((home, i)=>{
+					return <option key={i} selected={props.selectedHome.id === home.id} value={home.id}>{home.name}</option>
 				})}
 			</select>
 			{

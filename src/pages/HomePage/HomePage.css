@@ -93,6 +93,10 @@
 	opacity: 0.6;
 }
 
+.page-container .page-content .job-list .job-container.selected .job-item {
+	border: 2px solid black
+}
+
 .page-container .page-content .job-list .job-container .assignee {
 	margin-left: 10px;
 	margin-right: 10px;
