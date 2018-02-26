@@ -37,7 +37,7 @@ const TaskList = (props) => {
                         t.userId ? _.get(_.find(props.users, { id: t.userId }), 'firstname') : 'Kimse atanmadı'
                       }
                     </div>
-                    <div className="delete-button">sil</div>
+                    <div className="delete-button" onClick={(e) => props.onClickTaskDelete(t.id)}>sil</div>
                   </div>
                   : null
               }
@@ -45,13 +45,6 @@ const TaskList = (props) => {
           }).value()
         }
       </div>
-      {
-        !props.filter ?
-          <div className="add-new-button-container">
-            <button className="add-new-button">+ Yeni İş</button>
-          </div>
-          : null
-      }
     </div>
   );
 }

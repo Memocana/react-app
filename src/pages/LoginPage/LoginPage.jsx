@@ -18,12 +18,19 @@ class LoginPage extends Component {
 		validation: false
 	}
 
+	componentWillReceiveProps(nextProps) {
+		if (_.get(nextProps, "user.jwt")) {
+			this.props.history.push('./home')
+		}
+	}
+
 	componentWillMount() {
 		if (!this.props.allHouses || this.props.allHouses.length === 0) {
 			this.setState({ loadingGetHouses: true })
 			this.props.getAllHouses(true);
 		}
 	}
+
 	login = () => {
 		const { name, surName, selectedHome } = this.state;
 		this.setState({ loadingLogin: true, validation: true })
@@ -31,16 +38,15 @@ class LoginPage extends Component {
 			this.props.registerAndLogin({ firstname: name, lastname: surName, houseId: Number(selectedHome) });
 		}
 	}
+
 	handleChange = (name, value) => {
 		let newState = { ...this.state };
 		newState.validation = false;
 		newState[name] = value;
 		this.setState({ ...newState });
 	}
+	
 	render() {
-		if (_.get(this.props, "user.jwt")) {
-			this.props.history.push('./home')
-		}
 		return (
 			<div className="page-container">
 				<Login

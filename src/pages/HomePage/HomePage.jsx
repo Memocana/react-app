@@ -9,15 +9,57 @@ import GeneralErrorModal from '../../components/GeneralErrorModal';
 import _ from 'lodash';
 
 import './HomePage.css';
+import NewTaskModal from '../../components/NewTaskModal';
+import NewTaskButton from '../../components/NewTaskButton';
 
 class HomePage extends Component {
 
 	state = {
 		users: [],
-		tasks: []
+		tasks: [],
+		showNewTaskModal: false,
+		taskDescription: ''
 	}
 
-	componentWillMount() {
+	onClickTaskDelete = (taskId) => {
+		let jwt = _.get(this.props, "user.jwt");
+		this.props.deleteTaskById(jwt, taskId);
+	}
+
+	handleChange = (name, value) => {
+		let newState = { ...this.state };
+		newState[name] = value;
+		this.setState({ ...newState });
+	}
+
+	addNewTask = () => {
+		let jwt = _.get(this.props, "user.jwt");
+		this.props.addNewTask(jwt, {
+			houseId: _.get(this.props, "user.houseId"),
+			description: this.state.taskDescription
+		})
+	}
+
+	closeNewTaskModal = () => {
+		this.setState({
+			showNewTaskModal: false,
+			taskDescription: ''
+		});
+	}
+
+	componentWillReceiveProps(nextProps) {
+		if (_.get(nextProps, 'tasksUpdateNeeded') && !_.get(nextProps, 'inProgressGetTasks')) {
+			let jwt = _.get(nextProps, "user.jwt");
+			let houseId = _.get(nextProps, "user.houseId");
+			this.props.getTasksByHouseId(jwt, houseId);
+			this.setState({
+				showNewTaskModal: false,
+				taskDescription: ''
+			});
+		}
+	}
+
+	componentDidMount() {
 		let jwt = _.get(this.props, "user.jwt");
 		let houseId = _.get(this.props, "user.houseId");
 		if (!_.get(this.props, 'inProgressGetUsers')) {
@@ -48,14 +90,25 @@ class HomePage extends Component {
 					<TaskList
 						users={this.props.users}
 						tasks={this.props.tasks}
-						onTaskClick={_.noop}
+						onTaskClick={() => _.noop}
+						onClickTaskDelete={this.onClickTaskDelete}
 						loadingState={this.props.inProgressGetTasks}
+					/>
+
+					<NewTaskButton
+						showNewTaskModal={this.state.showNewTaskModal}
+						taskDescription={this.state.taskDescription}
+						handleChange={this.handleChange}
+						addNewTask={this.addNewTask}
+						handleClose={this.closeNewTaskModal}
 					/>
 
 				</div>
 
-				<GeneralErrorModal show={_.get(this.props, 'error.status') ? true : false}
-					title={"Hata Oluştu !"} body={_.get(this.props, 'error.message')}
+				<GeneralErrorModal
+					show={_.get(this.props, 'error.status') ? true : false}
+					title={"Hata Oluştu !"}
+					body={_.get(this.props, 'error.message')}
 					handleClose={() => this.props.closeErrorModal()} />
 			</div>
 		);
@@ -70,6 +123,7 @@ const mapStateToProps = (state) => {
 		tasks: state.home.tasks,
 		inProgressGetUsers: state.home.inProgressGetUsers,
 		inProgressGetTasks: state.home.inProgressGetTasks,
+		tasksUpdateNeeded: state.home.tasksUpdateNeeded,
 		error: state.home.error
 	};
 };
@@ -80,6 +134,12 @@ const mapDispatchToProps = (dispatch) => {
 		},
 		getTasksByHouseId: (token, houseId) => {
 			homeStore.getTasksByHouseId(dispatch, token, houseId);
+		},
+		addNewTask: (token, data) => {
+			homeStore.addNewTask(dispatch, token, data);
+		},
+		deleteTaskById: (token, taskId) => {
+			homeStore.deleteTaskById(dispatch, token, taskId);
 		},
 		closeErrorModal: () => {
 			homeStore.closeErrorModal(dispatch);

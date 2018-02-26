@@ -6,6 +6,8 @@ import _ from 'lodash';
 // Actions
 const GET_USERS = 'reducer/GET_USERS';
 const GET_TASKS = 'reducer/GET_TASKS';
+const ADD_TASK = 'reducer/ADD_TASK';
+const DELETE_TASK = 'reducer/DELETE_TASK';
 const CLOSE_ERROR_MODAL = 'reducer/CLOSE_ERROR_MODAL';
 
 
@@ -16,6 +18,7 @@ export default (state = {
 	tasks: [],
 	inProgressGetUsers: false,
 	inProgressGetTasks: false,
+	tasksUpdateNeeded: false,
 	error: {
 		status: false,
 		message: ""
@@ -33,7 +36,22 @@ export default (state = {
 			return {
 				...state,
 				tasks: action.tasks,
+				tasksUpdateNeeded: action.tasksUpdateNeeded,
 				inProgressGetTasks: action.inProgressGetTasks,
+				error: action.error
+			};
+		case ADD_TASK:
+			return {
+				...state,
+				tasksUpdateNeeded: action.tasksUpdateNeeded,
+				inProgressAddTask: action.inProgressDeleteTask,
+				error: action.error
+			};
+		case DELETE_TASK:
+			return {
+				...state,
+				tasksUpdateNeeded: action.tasksUpdateNeeded,
+				inProgressDeleteTask: action.inProgressDeleteTask,
 				error: action.error
 			};
 		case CLOSE_ERROR_MODAL:
@@ -103,7 +121,55 @@ export function getTasksByHouseId(dispatch, token, houseID) {
 	return dispatch({
 		type: GET_TASKS,
 		tasks: [],
+		tasksUpdateNeeded: false,
 		inProgressGetTasks: true
+	});
+};
+
+export function addNewTask(dispatch, token, data) {
+	NetworkServices.requestData("POST", Endpoints.addNewTask, data, token).then((response) => {
+		return dispatch({
+			type: ADD_TASK,
+			tasksUpdateNeeded: true,
+			inProgressAddTask: false
+		});
+	}).catch(error => {
+		return dispatch({
+			type: ADD_TASK,
+			inProgressAddTask: false,
+			error: {
+				status: true,
+				message: "" + error
+			}
+		});
+	});
+	return dispatch({
+		type: ADD_TASK,
+		inProgressAddTask: true
+	});
+};
+
+export function deleteTaskById(dispatch, token, taskID) {
+	let endpoint = _.replace(Endpoints.deleteTaskById, '%taskID%', taskID);
+	NetworkServices.requestData("DELETE", endpoint, "", token).then((response) => {
+		return dispatch({
+			type: DELETE_TASK,
+			tasksUpdateNeeded: true,
+			inProgressDeleteTask: false
+		});
+	}).catch(error => {
+		return dispatch({
+			type: DELETE_TASK,
+			inProgressDeleteTask: false,
+			error: {
+				status: true,
+				message: "" + error
+			}
+		});
+	});
+	return dispatch({
+		type: DELETE_TASK,
+		inProgressDeleteTask: true
 	});
 };
 
