@@ -8,8 +8,7 @@ import TaskList from '../../components/TaskList';
 import GeneralErrorModal from '../../components/GeneralErrorModal';
 import _ from 'lodash';
 
-import './HomePage.css';
-import NewTaskModal from '../../components/NewTaskModal';
+import './HomePage.scss';
 import NewTaskButton from '../../components/NewTaskButton';
 
 class HomePage extends Component {

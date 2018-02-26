@@ -6,7 +6,7 @@ import Login from '../../components/Login'
 import GeneralErrorModal from '../../components/GeneralErrorModal'
 import _ from 'lodash';
 
-import './LoginPage.css';
+import './LoginPage.scss';
 
 
 class LoginPage extends Component {
