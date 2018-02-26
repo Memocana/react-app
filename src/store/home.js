@@ -51,7 +51,7 @@ export function getUsersByHouseId(dispatch, token, houseID) {
 	let users = [];
 	let endpoint = _.replace(Endpoints.getUsersByHouseId, '%houseID%', houseID);
 	NetworkServices.requestData("GET", endpoint, "", token).then((response) => {
-		if (response.data && response.data.length > 0) {
+		if (response.data) {
 			users = response.data;
 			return dispatch({
 				type: GET_USERS,
@@ -81,7 +81,7 @@ export function getTasksByHouseId(dispatch, token, houseID) {
 	let tasks = [];
 	let endpoint = _.replace(Endpoints.getTasksByHouseId, '%houseID%', houseID);
 	NetworkServices.requestData("GET", endpoint, "", token).then((response) => {
-		if (response.data && response.data.length > 0) {
+		if (response.data) {
 			tasks = response.data;
 			return dispatch({
 				type: GET_TASKS,

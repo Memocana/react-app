@@ -17,7 +17,6 @@ export function requestData(requestType, path, data, token) {
 			headers: headers,
 			method: requestType,
 			data: data,
-			responseType: "json"
 		})
 			.then(response => {
 				resolve(response)

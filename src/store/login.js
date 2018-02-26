@@ -93,7 +93,7 @@ export function registerAndLogin(dispatch,user) {
 				type: REGISTER_AND_LOGIN,
 				user:{},
 				inProgressLogin:false,
-				error:{status:true,message:"Kullanıcı oluşturulamadı !" + error}
+				error:{status:true,message:"Kullanıcı oluşturulamadı !" + error.response.data}
 		});
 		});
 		return dispatch({
