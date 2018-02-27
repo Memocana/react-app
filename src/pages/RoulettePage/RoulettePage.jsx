@@ -59,21 +59,21 @@ class RoulettePage extends Component {
 		document.getElementById("roulette").classList.add("active");
 		document.getElementById("roulette").style.marginTop = -1 * 60 * selected.item + 120 + "px";
 
-		setTimeout(()=> {
+		setTimeout(function(){
 			this.setState({
 				showModal: true,
 				modalTitle: 'Tebrikler',
 				modalBody: "İhale " + selected.user.firstname + " " + selected.user.lastname + " adlı kişiye kalmıştır."
 			});
-			this.props.getTasksByHouseId(this.props.user.houseID);
+			this.props.getTasksByHouseId(this.props.user.houseId);
 			document.getElementById("roulette").classList.remove("active");
 			document.getElementById("roulette").classList.add("reset");
 			document.getElementById("roulette").removeAttribute("style");
-		},6500);
+		}.bind(this),6500);
   }
 
   getRandomNumberByRange = (min, max) => {
-  	return parseInt(Math.random() * (max - min) + min, 2);
+  	return parseInt(Math.random() * (max - min) + min);
   }
 
 	render() {
