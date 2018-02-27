@@ -126,8 +126,8 @@ export function getTasksByHouseId(dispatch,houseID) {
 	});
 };
 
-export function addNewTask(dispatch, token, data) {
-	NetworkServices.requestData("POST", Endpoints.addNewTask, data, token).then((response) => {
+export function addNewTask(dispatch, data) {
+	NetworkServices.requestData("POST", Endpoints.addNewTask, data, true).then((response) => {
 		return dispatch({
 			type: ADD_TASK,
 			tasksUpdateNeeded: true,
@@ -149,9 +149,9 @@ export function addNewTask(dispatch, token, data) {
 	});
 };
 
-export function deleteTaskById(dispatch, token, taskID) {
+export function deleteTaskById(dispatch, taskID) {
 	let endpoint = _.replace(Endpoints.deleteTaskById, '%taskID%', taskID);
-	NetworkServices.requestData("DELETE", endpoint, "", token).then((response) => {
+	NetworkServices.requestData("DELETE", endpoint, "", true).then((response) => {
 		return dispatch({
 			type: DELETE_TASK,
 			tasksUpdateNeeded: true,
