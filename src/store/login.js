@@ -12,7 +12,9 @@ export default (state = {state:[],
 	allHouses:[],
 	inProgressGetHouses:false,
 	inProgressLogin:false,
-  error:{status:false,message:""}}, action) => {
+	error:{status:false,message:""},
+	user: (localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : null)
+	}, action) => {
   switch (action.type) {
     case TEST:
       return {
@@ -53,7 +55,7 @@ export function testStatus(dispatch, status) {
 
 export function getAllHouses(dispatch) {
 	let allHouses=[];
-	NetworkServices.requestData("GET",Endpoints.getAllHouses,"","").then((response)=>{
+	NetworkServices.requestData("GET",Endpoints.getAllHouses,"",false).then((response)=>{
 			if(response.data && response.data.length>0) {
 				allHouses=response.data;
 				return dispatch({
@@ -70,8 +72,9 @@ export function getAllHouses(dispatch) {
 	});
 };
 export function registerAndLogin(dispatch,user) {
-	NetworkServices.requestData("POST",Endpoints.registerAndLogin,user,"").then((response)=>{
+	NetworkServices.requestData("POST",Endpoints.registerAndLogin,user,false).then((response)=>{
 			if(response.data && response.data.success) {
+				localStorage.setItem('user', JSON.stringify(response.data));
 				return dispatch({
 					type: REGISTER_AND_LOGIN,
 					user:response.data,

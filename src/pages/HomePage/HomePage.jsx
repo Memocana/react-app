@@ -21,8 +21,7 @@ class HomePage extends Component {
 	}
 
 	onClickTaskDelete = (taskId) => {
-		let jwt = _.get(this.props, "user.jwt");
-		this.props.deleteTaskById(jwt, taskId);
+		this.props.deleteTaskById(taskId);
 	}
 
 	handleChange = (name, value) => {
@@ -32,8 +31,7 @@ class HomePage extends Component {
 	}
 
 	addNewTask = () => {
-		let jwt = _.get(this.props, "user.jwt");
-		this.props.addNewTask(jwt, {
+		this.props.addNewTask({
 			houseId: _.get(this.props, "user.houseId"),
 			description: this.state.taskDescription
 		})
@@ -48,9 +46,8 @@ class HomePage extends Component {
 
 	componentWillReceiveProps(nextProps) {
 		if (_.get(nextProps, 'tasksUpdateNeeded') && !_.get(nextProps, 'inProgressGetTasks')) {
-			let jwt = _.get(nextProps, "user.jwt");
 			let houseId = _.get(nextProps, "user.houseId");
-			this.props.getTasksByHouseId(jwt, houseId);
+			this.props.getTasksByHouseId(houseId);
 			this.setState({
 				showNewTaskModal: false,
 				taskDescription: ''
@@ -59,13 +56,12 @@ class HomePage extends Component {
 	}
 
 	componentDidMount() {
-		let jwt = _.get(this.props, "user.jwt");
 		let houseId = _.get(this.props, "user.houseId");
 		if (!_.get(this.props, 'inProgressGetUsers')) {
-			this.props.getUsersByHouseId(jwt, houseId);
+			this.props.getUsersByHouseId(houseId);
 		}
 		if (!_.get(this.props, 'inProgressGetTasks')) {
-			this.props.getTasksByHouseId(jwt, houseId);
+			this.props.getTasksByHouseId(houseId);
 		}
 	}
 
@@ -128,17 +124,17 @@ const mapStateToProps = (state) => {
 };
 const mapDispatchToProps = (dispatch) => {
 	return {
-		getUsersByHouseId: (token, houseId) => {
-			homeStore.getUsersByHouseId(dispatch, token, houseId);
+		getUsersByHouseId: (houseId) => {
+			homeStore.getUsersByHouseId(dispatch, houseId);
 		},
-		getTasksByHouseId: (token, houseId) => {
-			homeStore.getTasksByHouseId(dispatch, token, houseId);
+		getTasksByHouseId: (houseId) => {
+			homeStore.getTasksByHouseId(dispatch, houseId);
 		},
-		addNewTask: (token, data) => {
-			homeStore.addNewTask(dispatch, token, data);
+		addNewTask: (data) => {
+			homeStore.addNewTask(dispatch, data);
 		},
-		deleteTaskById: (token, taskId) => {
-			homeStore.deleteTaskById(dispatch, token, taskId);
+		deleteTaskById: (taskId) => {
+			homeStore.deleteTaskById(dispatch, taskId);
 		},
 		closeErrorModal: () => {
 			homeStore.closeErrorModal(dispatch);

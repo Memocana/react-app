@@ -10,7 +10,7 @@ import './LoginPage.scss';
 
 
 class LoginPage extends Component {
-	
+
 	state = {
 		name: '',
 		surName: '',
@@ -19,12 +19,13 @@ class LoginPage extends Component {
 	}
 
 	componentWillReceiveProps(nextProps) {
-		if (_.get(nextProps, "user.jwt")) {
+		if (_.get(JSON.parse(localStorage.getItem('user')), "jwt")) {
 			this.props.history.push('./home')
 		}
 	}
 
 	componentWillMount() {
+		localStorage.removeItem('user');
 		if (!this.props.allHouses || this.props.allHouses.length === 0) {
 			this.setState({ loadingGetHouses: true })
 			this.props.getAllHouses(true);
@@ -45,7 +46,7 @@ class LoginPage extends Component {
 		newState[name] = value;
 		this.setState({ ...newState });
 	}
-	
+
 	render() {
 		return (
 			<div className="page-container">

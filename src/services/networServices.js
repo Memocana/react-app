@@ -1,12 +1,12 @@
 import * as http from 'axios';
 import * as Endpoints from '../const/endpoints';
 
-export function requestData(requestType, path, data, token) {
+export function requestData(requestType, path, data, isAuthanticate) {
 	let headers={};
-	headers = token ?
+	headers = isAuthanticate ?
 	{
 		"Content-Type":"application/json",
-		"Authorization": token,
+		"Authorization": JSON.parse(localStorage.getItem('user')).jwt,
 
 	} : {"Content-Type":"application/json"}
 
@@ -27,4 +27,5 @@ export function requestData(requestType, path, data, token) {
 			});
 	});
 }
+
 

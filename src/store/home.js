@@ -65,10 +65,10 @@ export default (state = {
 	}
 }
 
-export function getUsersByHouseId(dispatch, token, houseID) {
+export function getUsersByHouseId(dispatch, houseID) {
 	let users = [];
 	let endpoint = _.replace(Endpoints.getUsersByHouseId, '%houseID%', houseID);
-	NetworkServices.requestData("GET", endpoint, "", token).then((response) => {
+	NetworkServices.requestData("GET", endpoint, "", true).then((response) => {
 		if (response.data) {
 			users = response.data;
 			return dispatch({
@@ -95,10 +95,10 @@ export function getUsersByHouseId(dispatch, token, houseID) {
 	});
 };
 
-export function getTasksByHouseId(dispatch, token, houseID) {
+export function getTasksByHouseId(dispatch,houseID) {
 	let tasks = [];
 	let endpoint = _.replace(Endpoints.getTasksByHouseId, '%houseID%', houseID);
-	NetworkServices.requestData("GET", endpoint, "", token).then((response) => {
+	NetworkServices.requestData("GET", endpoint, "", true).then((response) => {
 		if (response.data) {
 			tasks = response.data;
 			return dispatch({
