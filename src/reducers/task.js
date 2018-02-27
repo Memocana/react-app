@@ -3,21 +3,23 @@ import * as Endpoints from '../const/endpoints';
 
 import _ from 'lodash';
 
-// ACTIONS
+// Actions
 const GET_USERS = 'reducer/GET_USERS';
 const GET_TASKS = 'reducer/GET_TASKS';
 const ADD_TASK = 'reducer/ADD_TASK';
+const UPDATE_TASK = 'reducer/UPDATE_TASK';
 const DELETE_TASK = 'reducer/DELETE_TASK';
 const CLOSE_ERROR_MODAL = 'reducer/CLOSE_ERROR_MODAL';
 
 
-// REDUCERS
+// Reducer
 export default (state = {
 	state: [],
 	users: [],
 	tasks: [],
 	inProgressGetUsers: false,
 	inProgressGetTasks: false,
+	inProgressUpdateTask: false,
 	tasksUpdateNeeded: false,
 	error: {
 		status: false,
@@ -47,6 +49,13 @@ export default (state = {
 				inProgressAddTask: action.inProgressDeleteTask,
 				error: action.error
 			};
+		case UPDATE_TASK:
+			return {
+				...state,
+				tasksUpdateNeeded: action.tasksUpdateNeeded,
+				inProgressUpdateTask: action.inProgressUpdateTask,
+				error: action.error
+		};
 		case DELETE_TASK:
 			return {
 				...state,
@@ -65,7 +74,6 @@ export default (state = {
 	}
 }
 
-//ACTION CREATERS
 export function getUsersByHouseId(dispatch, houseID) {
 	let users = [];
 	let endpoint = _.replace(Endpoints.getUsersByHouseId, '%houseID%', houseID);
@@ -147,6 +155,30 @@ export function addNewTask(dispatch, data) {
 	return dispatch({
 		type: ADD_TASK,
 		inProgressAddTask: true
+	});
+};
+
+export function updateTask(dispatch, data, taskID) {
+	let endpoint = _.replace(Endpoints.updateTask, '%taskID%', taskID);
+	NetworkServices.requestData("PUT", endpoint, data, true).then((response) => {
+		return dispatch({
+			type: UPDATE_TASK,
+			tasksUpdateNeeded: true,
+			inProgressUpdateTask: false
+		});
+	}).catch(error => {
+		return dispatch({
+			type: UPDATE_TASK,
+			inProgressUpdateTask: false,
+			error: {
+				status: true,
+				message: "" + error
+			}
+		});
+	});
+	return dispatch({
+		type: UPDATE_TASK,
+		inProgressUpdateTask: true
 	});
 };
 

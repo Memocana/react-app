@@ -1,10 +1,9 @@
 // src/reducers/index.js
 import login from './login';
-import home from './home';
+import task from './task';
 import { combineReducers } from 'redux';
 const rootReducer = combineReducers({
 	login,
-	home
-	//roulette
+	task
 });
 export default rootReducer;

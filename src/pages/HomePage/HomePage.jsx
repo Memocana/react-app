@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import * as homeReducer from '../../reducers/home';
+import * as taskReducer from '../../reducers/task';
 import HeaderMenu from '../../components/HeaderMenu';
 import UserList from '../../components/UserList';
 import TaskList from '../../components/TaskList';
@@ -114,30 +114,30 @@ class HomePage extends Component {
 const mapStateToProps = (state) => {
 	return {
 		user: state.login.user,
-		users: state.home.users,
-		tasks: state.home.tasks,
-		inProgressGetUsers: state.home.inProgressGetUsers,
-		inProgressGetTasks: state.home.inProgressGetTasks,
-		tasksUpdateNeeded: state.home.tasksUpdateNeeded,
-		error: state.home.error
+		users: state.task.users,
+		tasks: state.task.tasks,
+		inProgressGetUsers: state.task.inProgressGetUsers,
+		inProgressGetTasks: state.task.inProgressGetTasks,
+		tasksUpdateNeeded: state.task.tasksUpdateNeeded,
+		error: state.task.error
 	};
 };
 const mapDispatchToProps = (dispatch) => {
 	return {
 		getUsersByHouseId: (houseId) => {
-			homeReducer.getUsersByHouseId(dispatch, houseId);
+			taskReducer.getUsersByHouseId(dispatch, houseId);
 		},
 		getTasksByHouseId: (houseId) => {
-			homeReducer.getTasksByHouseId(dispatch, houseId);
+			taskReducer.getTasksByHouseId(dispatch, houseId);
 		},
 		addNewTask: (data) => {
-			homeReducer.addNewTask(dispatch, data);
+			taskReducer.addNewTask(dispatch, data);
 		},
 		deleteTaskById: (taskId) => {
-			homeReducer.deleteTaskById(dispatch, taskId);
+			taskReducer.deleteTaskById(dispatch, taskId);
 		},
 		closeErrorModal: () => {
-			homeReducer.closeErrorModal(dispatch);
+			taskReducer.closeErrorModal(dispatch);
 		}
 	};
 };
