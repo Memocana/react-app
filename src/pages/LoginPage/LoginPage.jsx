@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import * as loginReducer from '../../reducers/login';
 import Login from '../../components/Login'
-import GeneralErrorModal from '../../components/GeneralErrorModal'
+import GeneralModal from '../../components/GeneralModal'
 import _ from 'lodash';
 
 import './LoginPage.scss';
@@ -60,7 +60,7 @@ class LoginPage extends Component {
 					loadingState={this.props.inProgressGetHouses || this.props.inProgressLogin}
 					validate={this.state.validation} />
 
-				<GeneralErrorModal show={this.props.error.status ? this.props.error.status : false}
+				<GeneralModal show={this.props.error.status ? this.props.error.status : false}
 					title={"Hata Oluştu !"} body={this.props.error.message}
 					handleClose={() => this.props.closeErrorModal()} />
 			</div>);
@@ -95,4 +95,3 @@ const mapDispatchToProps = (dispatch) => {
 export default withRouter(
 	connect(mapStateToProps, mapDispatchToProps)(LoginPage)
 );
-

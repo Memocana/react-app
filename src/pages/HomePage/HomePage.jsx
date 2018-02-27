@@ -5,7 +5,7 @@ import * as taskReducer from '../../reducers/task';
 import HeaderMenu from '../../components/HeaderMenu';
 import UserList from '../../components/UserList';
 import TaskList from '../../components/TaskList';
-import GeneralErrorModal from '../../components/GeneralErrorModal';
+import GeneralModal from '../../components/GeneralModal';
 import _ from 'lodash';
 
 import './HomePage.scss';
@@ -100,7 +100,7 @@ class HomePage extends Component {
 
 				</div>
 
-				<GeneralErrorModal
+				<GeneralModal
 					show={_.get(this.props, 'error.status') ? true : false}
 					title={"Hata Oluştu !"}
 					body={_.get(this.props, 'error.message')}

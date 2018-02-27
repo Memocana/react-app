@@ -5,6 +5,7 @@ import * as taskStore from '../../reducers/task';
 import HeaderMenu from '../../components/HeaderMenu';
 import TaskList from '../../components/TaskList';
 import Roulette from '../../components/Roulette';
+import GeneralModal from '../../components/GeneralModal'
 import './RoulettePage.scss';
 import _ from 'lodash';
 
@@ -12,16 +13,15 @@ class RoulettePage extends Component {
 
 	state = {
 		selectedTask: null,
-		ITERATION: 10
+		ITERATION: 10,
 	}
 
 	componentDidMount(){
-		this.createRoulette();
 		let houseId = _.get(this.props, "user.houseId");
-		if (!_.get(this.props, 'users')) {
+		if (_.isEmpty(this.props.users)) {
 			this.props.getUsersByHouseId(houseId);
 		}
-		if (!_.get(this.props, 'tasks')) {
+		if (_.isEmpty(this.props.tasks)) {
 			this.props.getTasksByHouseId(houseId);
 		}
 	}
@@ -30,15 +30,19 @@ class RoulettePage extends Component {
 		this.setState({ selectedTask: task });
 	}
 
-	createRoulette = () =>{
-    for(let i = 0; i < this.state.ITERATION; i++) {
-      this.props.users.forEach((user, index)=>{
-        document.getElementById("roulette").innerHTML += "<div class='user'>"+ user.firstname +" "+ user.lastname +"</div>";
-      });
-    }
-  };
+	closeModal = () => {
+		this.setState({showModal:false});
+	};
 
 	startRoulette = () => {
+		if(!this.state.selectedTask){
+			this.setState({
+				showModal: true,
+				modalTitle: 'Hata',
+				modalBody: 'Lütfen işi seçiniz.'
+			});
+			return;
+		}
 		let decisions = {
 			iteration : this.getRandomNumberByRange(1, this.state.ITERATION),
 			user : this.getRandomNumberByRange(0, this.props.users.length)
@@ -55,8 +59,13 @@ class RoulettePage extends Component {
 		document.getElementById("roulette").classList.add("active");
 		document.getElementById("roulette").style.marginTop = -1 * 60 * selected.item + 120 + "px";
 
-		setTimeout(function() {
-			alert("İhale " + selected.user.firstname + " " + selected.user.lastname + " adlı kişiye kalmıştır.");
+		setTimeout(()=> {
+			this.setState({
+				showModal: true,
+				modalTitle: 'Tebrikler',
+				modalBody: "İhale " + selected.user.firstname + " " + selected.user.lastname + " adlı kişiye kalmıştır."
+			});
+			this.props.getTasksByHouseId(this.props.user.houseID);
 			document.getElementById("roulette").classList.remove("active");
 			document.getElementById("roulette").classList.add("reset");
 			document.getElementById("roulette").removeAttribute("style");
@@ -64,7 +73,7 @@ class RoulettePage extends Component {
   }
 
   getRandomNumberByRange = (min, max) => {
-  	return parseInt(Math.random() * (max - min) + min);
+  	return parseInt(Math.random() * (max - min) + min, 2);
   }
 
 	render() {
@@ -82,7 +91,10 @@ class RoulettePage extends Component {
 						filter={true}
 						loadingState={this.props.inProgressGetTasks}
 					/>
-					<Roulette startRoulette={()=>this.startRoulette()}/>
+					<Roulette users={this.props.userList} startRoulette={()=>this.startRoulette()}/>
+					<GeneralModal show={this.state.showModal}
+						title={this.state.modalTitle} body={this.state.modalBody}
+						handleClose={() => this.closeModal()} />
 				</div>
 			</div>
 		);
@@ -90,9 +102,15 @@ class RoulettePage extends Component {
 }
 
 const mapStateToProps = (state) => {
+	let userList = [];
+	const ITERATION = 10;
+	for(let i = 0; i < ITERATION; i++) {
+		userList = _.concat(userList, state.task.users);
+	}
 	return {
 		user: state.login.user,
 		users: state.task.users,
+		userList: userList,
 		tasks: state.task.tasks,
 		inProgressGetTasks: state.task.inProgressGetTasks
 	};
