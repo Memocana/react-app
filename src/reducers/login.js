@@ -1,13 +1,13 @@
 import  * as NetworkServices from '../services/networServices';
 import * as Endpoints from '../const/endpoints';
-// Actions
+// ACTIONS
 const TEST = 'reducer/TEST';
 const GET_ALL_HOUSES = 'reducer/GET_ALL_HOUSES';
 const REGISTER_AND_LOGIN = 'reducer/REGISTER_AND_LOGIN';
 const CLOSE_ERROR_MODAL = 'reducer/CLOSE_ERROR_MODAL';
 
 
-// Reducer
+// REDUCERS
 export default (state = {state:[],
 	allHouses:[],
 	inProgressGetHouses:false,
@@ -45,7 +45,7 @@ export default (state = {state:[],
   }
 }
 
-// Action Creators
+// ACTION CREATERS
 export function testStatus(dispatch, status) {
     return dispatch({
         type: TEST,

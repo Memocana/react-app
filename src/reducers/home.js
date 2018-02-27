@@ -3,7 +3,7 @@ import * as Endpoints from '../const/endpoints';
 
 import _ from 'lodash';
 
-// Actions
+// ACTIONS
 const GET_USERS = 'reducer/GET_USERS';
 const GET_TASKS = 'reducer/GET_TASKS';
 const ADD_TASK = 'reducer/ADD_TASK';
@@ -11,7 +11,7 @@ const DELETE_TASK = 'reducer/DELETE_TASK';
 const CLOSE_ERROR_MODAL = 'reducer/CLOSE_ERROR_MODAL';
 
 
-// Reducer
+// REDUCERS
 export default (state = {
 	state: [],
 	users: [],
@@ -65,6 +65,7 @@ export default (state = {
 	}
 }
 
+//ACTION CREATERS
 export function getUsersByHouseId(dispatch, houseID) {
 	let users = [];
 	let endpoint = _.replace(Endpoints.getUsersByHouseId, '%houseID%', houseID);

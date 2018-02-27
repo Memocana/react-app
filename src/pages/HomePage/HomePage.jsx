@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import * as homeStore from '../../store/home';
+import * as homeReducer from '../../reducers/home';
 import HeaderMenu from '../../components/HeaderMenu';
 import UserList from '../../components/UserList';
 import TaskList from '../../components/TaskList';
@@ -125,19 +125,19 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
 	return {
 		getUsersByHouseId: (houseId) => {
-			homeStore.getUsersByHouseId(dispatch, houseId);
+			homeReducer.getUsersByHouseId(dispatch, houseId);
 		},
 		getTasksByHouseId: (houseId) => {
-			homeStore.getTasksByHouseId(dispatch, houseId);
+			homeReducer.getTasksByHouseId(dispatch, houseId);
 		},
 		addNewTask: (data) => {
-			homeStore.addNewTask(dispatch, data);
+			homeReducer.addNewTask(dispatch, data);
 		},
 		deleteTaskById: (taskId) => {
-			homeStore.deleteTaskById(dispatch, taskId);
+			homeReducer.deleteTaskById(dispatch, taskId);
 		},
 		closeErrorModal: () => {
-			homeStore.closeErrorModal(dispatch);
+			homeReducer.closeErrorModal(dispatch);
 		}
 	};
 };

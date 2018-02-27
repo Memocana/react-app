@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import * as loginStore from '../../store/login';
+import * as loginReducer from '../../reducers/login';
 import Login from '../../components/Login'
 import GeneralErrorModal from '../../components/GeneralErrorModal'
 import _ from 'lodash';
@@ -78,16 +78,16 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
 	return {
 		testStatus: (data) => {
-			loginStore.testStatus(dispatch, data);
+			loginReducer.testStatus(dispatch, data);
 		},
 		getAllHouses: () => {
-			loginStore.getAllHouses(dispatch);
+			loginReducer.getAllHouses(dispatch);
 		},
 		registerAndLogin: (user) => {
-			loginStore.registerAndLogin(dispatch, user);
+			loginReducer.registerAndLogin(dispatch, user);
 		},
 		closeErrorModal: () => {
-			loginStore.closeErrorModal(dispatch);
+			loginReducer.closeErrorModal(dispatch);
 		}
 	};
 };
