@@ -4,7 +4,6 @@ import * as Endpoints from '../const/endpoints';
 import _ from 'lodash';
 
 // Actions
-const GET_USERS = 'reducer/GET_USERS';
 const GET_TASKS = 'reducer/GET_TASKS';
 const ADD_TASK = 'reducer/ADD_TASK';
 const UPDATE_TASK = 'reducer/UPDATE_TASK';
@@ -15,9 +14,7 @@ const CLOSE_ERROR_MODAL = 'reducer/CLOSE_ERROR_MODAL';
 // Reducer
 export default (state = {
 	state: [],
-	users: [],
 	tasks: [],
-	inProgressGetUsers: false,
 	inProgressGetTasks: false,
 	inProgressUpdateTask: false,
 	tasksUpdateNeeded: false,
@@ -27,13 +24,6 @@ export default (state = {
 	}
 }, action) => {
 	switch (action.type) {
-		case GET_USERS:
-			return {
-				...state,
-				users: action.users,
-				inProgressGetUsers: action.inProgressGetUsers,
-				error: action.error
-			};
 		case GET_TASKS:
 			return {
 				...state,
@@ -73,37 +63,6 @@ export default (state = {
 			return state;
 	}
 }
-
-export function getUsersByHouseId(dispatch, houseID) {
-	let users = [];
-	let endpoint = _.replace(Endpoints.getUsersByHouseId, '%houseID%', houseID);
-	NetworkServices.requestData("GET", endpoint, "", true).then((response) => {
-		if (response.data) {
-			users = response.data;
-			return dispatch({
-				type: GET_USERS,
-				users: users,
-				inProgressGetUsers: false
-			});
-		}
-	}).catch(error => {
-		return dispatch({
-			type: GET_USERS,
-			users: [],
-			inProgressGetUsers: false,
-			error: {
-				status: true,
-				message: "" + error
-			}
-		});
-	});
-	return dispatch({
-		type: GET_USERS,
-		users: [],
-		inProgressGetUsers: true
-	});
-};
-
 export function getTasksByHouseId(dispatch,houseID) {
 	let tasks = [];
 	let endpoint = _.replace(Endpoints.getTasksByHouseId, '%houseID%', houseID);

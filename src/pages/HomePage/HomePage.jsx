@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import * as taskReducer from '../../reducers/task';
+import * as userReducer from '../../reducers/user';
 import HeaderMenu from '../../components/HeaderMenu';
 import UserList from '../../components/UserList';
 import TaskList from '../../components/TaskList';
@@ -122,9 +123,9 @@ class HomePage extends Component {
 const mapStateToProps = (state) => {
 	return {
 		user: state.login.user,
-		users: state.task.users,
+		users: state.user.users,
 		tasks: state.task.tasks,
-		inProgressGetUsers: state.task.inProgressGetUsers,
+		inProgressGetUsers: state.user.inProgressGetUsers,
 		inProgressGetTasks: state.task.inProgressGetTasks,
 		tasksUpdateNeeded: state.task.tasksUpdateNeeded,
 		error: state.task.error
@@ -133,7 +134,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
 	return {
 		getUsersByHouseId: (houseId) => {
-			taskReducer.getUsersByHouseId(dispatch, houseId);
+			userReducer.getUsersByHouseId(dispatch, houseId);
 		},
 		getTasksByHouseId: (houseId) => {
 			taskReducer.getTasksByHouseId(dispatch, houseId);
@@ -145,7 +146,7 @@ const mapDispatchToProps = (dispatch) => {
 			taskReducer.deleteTaskById(dispatch, taskId);
 		},
 		closeErrorModal: () => {
-			taskReducer.closeErrorModal(dispatch);
+			userReducer.closeErrorModal(dispatch);
 		}
 	};
 };

@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import * as taskStore from '../../reducers/task';
+import * as taskReducer from '../../reducers/task';
+import * as userReducer from '../../reducers/user';
 import HeaderMenu from '../../components/HeaderMenu';
 import TaskList from '../../components/TaskList';
 import Roulette from '../../components/Roulette';
@@ -114,11 +115,11 @@ const mapStateToProps = (state) => {
 	let userList = [];
 	const ITERATION = 10;
 	for(let i = 0; i < ITERATION; i++) {
-		userList = _.concat(userList, state.task.users);
+		userList = _.concat(userList, state.user.users);
 	}
 	return {
 		user: state.login.user,
-		users: state.task.users,
+		users: state.user.users,
 		userList: userList,
 		tasks: state.task.tasks,
 		inProgressGetTasks: state.task.inProgressGetTasks
@@ -128,13 +129,13 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
 	return {
 		getUsersByHouseId: (houseId) => {
-			taskStore.getUsersByHouseId(dispatch, houseId);
+			userReducer.getUsersByHouseId(dispatch, houseId);
 		},
 		getTasksByHouseId: (houseId) => {
-			taskStore.getTasksByHouseId(dispatch, houseId);
+			taskReducer.getTasksByHouseId(dispatch, houseId);
 		},
 		updateTask: (data, taskID) => {
-			taskStore.updateTask(dispatch, data, taskID);
+			taskReducer.updateTask(dispatch, data, taskID);
 		}
 	};
 };
