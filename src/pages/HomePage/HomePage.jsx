@@ -20,6 +20,35 @@ class HomePage extends Component {
 		taskDescription: ''
 	}
 
+	/* REACT LIFECYCLE FUNCTIONS */
+
+	componentWillMount() {
+		if(!JSON.parse(localStorage.getItem('user'))) {
+			this.props.history.push('/');
+		} else {
+			let houseId = _.get(this.props, "user.houseId");
+			if (!_.get(this.props, 'inProgressGetUsers')) {
+				this.props.getUsersByHouseId(houseId);
+			}
+			if (!_.get(this.props, 'inProgressGetTasks')) {
+				this.props.getTasksByHouseId(houseId);
+			}
+		}
+	}
+
+	componentWillReceiveProps(nextProps) {
+		if (_.get(nextProps, 'tasksUpdateNeeded') && !_.get(nextProps, 'inProgressGetTasks')) {
+			let houseId = _.get(nextProps, "user.houseId");
+			this.props.getTasksByHouseId(houseId);
+			this.setState({
+				showNewTaskModal: false,
+				taskDescription: ''
+			});
+		}
+	}
+
+	/********************************/
+
 	onClickTaskDelete = (taskId) => {
 		this.props.deleteTaskById(taskId);
 	}
@@ -42,27 +71,6 @@ class HomePage extends Component {
 			showNewTaskModal: false,
 			taskDescription: ''
 		});
-	}
-
-	componentWillReceiveProps(nextProps) {
-		if (_.get(nextProps, 'tasksUpdateNeeded') && !_.get(nextProps, 'inProgressGetTasks')) {
-			let houseId = _.get(nextProps, "user.houseId");
-			this.props.getTasksByHouseId(houseId);
-			this.setState({
-				showNewTaskModal: false,
-				taskDescription: ''
-			});
-		}
-	}
-
-	componentDidMount() {
-		let houseId = _.get(this.props, "user.houseId");
-		if (!_.get(this.props, 'inProgressGetUsers')) {
-			this.props.getUsersByHouseId(houseId);
-		}
-		if (!_.get(this.props, 'inProgressGetTasks')) {
-			this.props.getTasksByHouseId(houseId);
-		}
 	}
 
 	render() {
@@ -110,7 +118,7 @@ class HomePage extends Component {
 	}
 }
 
-
+/*CONNECTION TO REDUX STORE RELATED FUNCTIONS */
 const mapStateToProps = (state) => {
 	return {
 		user: state.login.user,

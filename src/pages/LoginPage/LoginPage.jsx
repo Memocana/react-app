@@ -18,6 +18,8 @@ class LoginPage extends Component {
 		validation: false
 	}
 
+	/* REACT LIFECYCLE FUNCTIONS */
+
 	componentWillReceiveProps(nextProps) {
 		if (_.get(JSON.parse(localStorage.getItem('user')), "jwt")) {
 			this.props.history.push('./home')
@@ -31,6 +33,8 @@ class LoginPage extends Component {
 			this.props.getAllHouses(true);
 		}
 	}
+
+	/***********************************/
 
 	login = () => {
 		const { name, surName, selectedHome } = this.state;
@@ -66,6 +70,8 @@ class LoginPage extends Component {
 			</div>);
 	}
 }
+
+/*CONNECTION TO REDUX STORE RELATED FUNCTIONS */
 const mapStateToProps = (state) => {
 	return {
 		allHouses: state.login.allHouses,

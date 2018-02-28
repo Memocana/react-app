@@ -16,15 +16,23 @@ class RoulettePage extends Component {
 		ITERATION: 10,
 	}
 
-	componentDidMount(){
-		let houseId = _.get(this.props, "user.houseId");
-		if (_.isEmpty(this.props.users)) {
-			this.props.getUsersByHouseId(houseId);
-		}
-		if (_.isEmpty(this.props.tasks)) {
-			this.props.getTasksByHouseId(houseId);
+	/* REACT LIFECYCLE FUNCTIONS */
+
+	componentWillMount() {
+		if(!JSON.parse(localStorage.getItem('user'))) {
+			this.props.history.push('/');
+		}else {
+			let houseId = _.get(this.props, "user.houseId");
+			if (_.isEmpty(this.props.users)) {
+				this.props.getUsersByHouseId(houseId);
+			}
+			if (_.isEmpty(this.props.tasks)) {
+				this.props.getTasksByHouseId(houseId);
+			}
 		}
 	}
+
+	/***********************************/
 
 	selectTask = (task) => {
 		this.setState({ selectedTask: task });
@@ -101,6 +109,7 @@ class RoulettePage extends Component {
 	}
 }
 
+/*CONNECTION TO REDUX STORE RELATED FUNCTIONS */
 const mapStateToProps = (state) => {
 	let userList = [];
 	const ITERATION = 10;
