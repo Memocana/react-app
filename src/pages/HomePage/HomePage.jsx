@@ -128,7 +128,7 @@ const mapStateToProps = (state) => {
 		inProgressGetUsers: state.user.inProgressGetUsers,
 		inProgressGetTasks: state.task.inProgressGetTasks,
 		tasksUpdateNeeded: state.task.tasksUpdateNeeded,
-		error: state.task.error
+		error: state.user.error ? state.user.error : state.task.error
 	};
 };
 const mapDispatchToProps = (dispatch) => {

@@ -8,8 +8,6 @@ const GET_TASKS = 'reducer/GET_TASKS';
 const ADD_TASK = 'reducer/ADD_TASK';
 const UPDATE_TASK = 'reducer/UPDATE_TASK';
 const DELETE_TASK = 'reducer/DELETE_TASK';
-const CLOSE_ERROR_MODAL = 'reducer/CLOSE_ERROR_MODAL';
-
 
 // Reducer
 export default (state = {
@@ -53,12 +51,6 @@ export default (state = {
 				inProgressDeleteTask: action.inProgressDeleteTask,
 				error: action.error
 			};
-		case CLOSE_ERROR_MODAL:
-			return {
-				...state,
-				error: action.error
-			};
-
 		default:
 			return state;
 	}
@@ -162,12 +154,5 @@ export function deleteTaskById(dispatch, taskID) {
 	return dispatch({
 		type: DELETE_TASK,
 		inProgressDeleteTask: true
-	});
-};
-
-export function closeErrorModal(dispatch) {
-	return dispatch({
-		type: CLOSE_ERROR_MODAL,
-		error: {}
 	});
 };
