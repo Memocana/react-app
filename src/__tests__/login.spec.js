@@ -1,6 +1,7 @@
 import React from 'react';
 import {shallow} from 'enzyme';
 import Login from '../components/Login';
+import renderer from 'react-test-renderer';
 
 const houses=[
     {
@@ -58,4 +59,19 @@ test('Login component renders correctly with correct props', () => {
 	expect(login.find('option').length).toEqual(4);
 	expect(login.find('.help-block').length).toEqual(2);
 
+  });
+
+  test('Login component matches snapshot', () => {
+	const tree = renderer.create(
+	  <Login login={()=>{}}
+		homes={houses}
+		handleChange={()=>{}}
+		name={"testUserName"}
+		surName={"testLastName"}
+		selectedHome={houses[0]}
+		loadingState={false}
+		validate={true}
+	/>
+	).toJSON();
+	expect(tree).toMatchSnapshot();
   });
