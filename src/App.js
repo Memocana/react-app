@@ -1,26 +1,20 @@
 import React, { Component } from 'react';
-import './App.scss';
+import { Switch, Route } from "react-router-dom";
+import HomePage from "./pages/HomePage/HomePage";
+import LoginPage from "./pages/LoginPage/LoginPage";
+
 import 'bootstrap/dist/css/bootstrap.css';
 
 
 class App extends Component {
-	/*REACT LIFECYCLE FUNCTIONS*/
-	constructor(props) {
-		super(props);
-		console.log("CONSTRUCTER !!");
-		this.state = {
-			test:""
-		};
-	}
-	componentWillMount() {
-		console.log("componentWillMount !!");
-	}
-	componentDidMount() {
-		console.log("componentDidMount !!");
-	}
+
   render() {
     return (
-			<div>----------ÖĞRENCİ EVİ----------</div>
+			<Switch>
+				<Route exact path="/" component={LoginPage} />
+				<Route path="/home" component={HomePage} />
+			</Switch>
+
     );
   }
 }
