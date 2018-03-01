@@ -6,6 +6,7 @@ import _ from 'lodash';
 // Actions
 const GET_TASKS = 'reducer/GET_TASKS';
 const ADD_TASK = 'reducer/ADD_TASK';
+const UPDATE_TASK = 'reducer/UPDATE_TASK';
 const DELETE_TASK = 'reducer/DELETE_TASK';
 
 // Reducer
@@ -36,6 +37,13 @@ export default (state = {
 				inProgressAddTask: action.inProgressDeleteTask,
 				error: action.error
 			};
+		case UPDATE_TASK:
+			return {
+				...state,
+				tasksUpdateNeeded: action.tasksUpdateNeeded,
+				inProgressUpdateTask: action.inProgressUpdateTask,
+				error: action.error
+		};
 		case DELETE_TASK:
 			return {
 				...state,
@@ -98,6 +106,30 @@ export function addNewTask(dispatch, data) {
 	return dispatch({
 		type: ADD_TASK,
 		inProgressAddTask: true
+	});
+};
+
+export function updateTask(dispatch, data, taskID) {
+	let endpoint = _.replace(Endpoints.updateTask, '%taskID%', taskID);
+	NetworkServices.requestData("PUT", endpoint, data, true).then((response) => {
+		return dispatch({
+			type: UPDATE_TASK,
+			tasksUpdateNeeded: true,
+			inProgressUpdateTask: false
+		});
+	}).catch(error => {
+		return dispatch({
+			type: UPDATE_TASK,
+			inProgressUpdateTask: false,
+			error: {
+				status: true,
+				message: "" + error
+			}
+		});
+	});
+	return dispatch({
+		type: UPDATE_TASK,
+		inProgressUpdateTask: true
 	});
 };
 
