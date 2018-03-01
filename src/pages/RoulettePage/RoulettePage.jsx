@@ -72,7 +72,8 @@ class RoulettePage extends Component {
 			this.setState({
 				showModal: true,
 				modalTitle: 'Tebrikler',
-				modalBody: "İhale " + selected.user.firstname + " " + selected.user.lastname + " adlı kişiye kalmıştır."
+				modalBody: "İhale " + selected.user.firstname + " " + selected.user.lastname + " adlı kişiye kalmıştır.",
+				selectedTask:null
 			});
 			this.props.getTasksByHouseId(this.props.user.houseId);
 			document.getElementById("roulette").classList.remove("active");

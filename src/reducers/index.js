@@ -1,11 +1,12 @@
 // src/reducers/index.js
 import login from './login';
-import task from './task';
 import user from './user';
+import task from './task';
 import { combineReducers } from 'redux';
+
 const rootReducer = combineReducers({
 	login,
-	task,
-	user
+	user,
+	task
 });
 export default rootReducer;
