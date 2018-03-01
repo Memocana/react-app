@@ -1,6 +1,6 @@
 // src/reducers/index.js
 import { combineReducers } from 'redux';
 const rootReducer = combineReducers({
-	//login
+	//TODO: login
 });
 export default rootReducer;
