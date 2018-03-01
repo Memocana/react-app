@@ -1,7 +1,4 @@
 import React, { Component } from 'react';
-import './App.scss';
-import 'bootstrap/dist/css/bootstrap.css';
-
 
 class App extends Component {
 	/*REACT LIFECYCLE FUNCTIONS*/
