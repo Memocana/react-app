@@ -1,12 +1,16 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
+import * as taskReducer from '../../reducers/task';
 import * as userReducer from '../../reducers/user';
 import HeaderMenu from '../../components/HeaderMenu';
 import UserList from '../../components/UserList';
+import TaskList from '../../components/TaskList';
 import GeneralModal from '../../components/GeneralModal';
-import './HomePage.scss';
 import _ from 'lodash';
+
+import './HomePage.scss';
+import NewTaskButton from '../../components/NewTaskButton';
 
 class HomePage extends Component {
 
@@ -27,15 +31,40 @@ class HomePage extends Component {
 			if (!_.get(this.props, 'inProgressGetUsers')) {
 				this.props.getUsersByHouseId(houseId);
 			}
+			if (!_.get(this.props, 'inProgressGetTasks')) {
+				this.props.getTasksByHouseId(houseId);
+			}
+		}
+	}
+
+	componentWillReceiveProps(nextProps) {
+		if (_.get(nextProps, 'tasksUpdateNeeded') && !_.get(nextProps, 'inProgressGetTasks')) {
+			let houseId = _.get(nextProps, "user.houseId");
+			this.props.getTasksByHouseId(houseId);
+			this.setState({
+				showNewTaskModal: false,
+				taskDescription: ''
+			});
 		}
 	}
 
 	/********************************/
 
+	onClickTaskDelete = (taskId) => {
+		this.props.deleteTaskById(taskId);
+	}
+
 	handleChange = (name, value) => {
 		let newState = { ...this.state };
 		newState[name] = value;
 		this.setState({ ...newState });
+	}
+
+	addNewTask = () => {
+		this.props.addNewTask({
+			houseId: _.get(this.props, "user.houseId"),
+			description: this.state.taskDescription
+		})
 	}
 
 	closeNewTaskModal = () => {
@@ -61,6 +90,23 @@ class HomePage extends Component {
 						tasks={this.props.tasks}
 						loadingState={this.props.inProgressGetUsers}
 					/>
+
+					<TaskList
+						users={this.props.users}
+						tasks={this.props.tasks}
+						onTaskClick={() => _.noop}
+						onClickTaskDelete={this.onClickTaskDelete}
+						loadingState={this.props.inProgressGetTasks}
+					/>
+
+					<NewTaskButton
+						showNewTaskModal={this.state.showNewTaskModal}
+						taskDescription={this.state.taskDescription}
+						handleChange={this.handleChange}
+						addNewTask={this.addNewTask}
+						handleClose={this.closeNewTaskModal}
+					/>
+
 				</div>
 
 				<GeneralModal
@@ -78,14 +124,26 @@ const mapStateToProps = (state) => {
 	return {
 		user: state.login.user,
 		users: state.user.users,
+		tasks: state.task.tasks,
 		inProgressGetUsers: state.user.inProgressGetUsers,
-		error: state.user.error
+		inProgressGetTasks: state.task.inProgressGetTasks,
+		tasksUpdateNeeded: state.task.tasksUpdateNeeded,
+		error: state.user.error ? state.user.error : state.task.error
 	};
 };
 const mapDispatchToProps = (dispatch) => {
 	return {
 		getUsersByHouseId: (houseId) => {
 			userReducer.getUsersByHouseId(dispatch, houseId);
+		},
+		getTasksByHouseId: (houseId) => {
+			taskReducer.getTasksByHouseId(dispatch, houseId);
+		},
+		addNewTask: (data) => {
+			taskReducer.addNewTask(dispatch, data);
+		},
+		deleteTaskById: (taskId) => {
+			taskReducer.deleteTaskById(dispatch, taskId);
 		},
 		closeErrorModal: () => {
 			userReducer.closeErrorModal(dispatch);
