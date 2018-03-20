@@ -37,38 +37,43 @@ export default (state = {
 	}
 }
 
-export function getUsersByHouseId(dispatch, houseID) {
-	let users = [];
-	let endpoint = _.replace(Endpoints.getUsersByHouseId, '%houseID%', houseID);
-	NetworkServices.requestData("GET", endpoint, "", true).then((response) => {
-		if (response.data) {
-			users = response.data;
+export function getUsersByHouseId(houseID) {
+	return function (dispatch) {
+		let users = [];
+		let endpoint = _.replace(Endpoints.getUsersByHouseId, '%houseID%', houseID);
+		NetworkServices.requestData("GET", endpoint, "", true).then((response) => {
+			if (response.data) {
+				users = response.data;
+				return dispatch({
+					type: GET_USERS,
+					users: users,
+					inProgressGetUsers: false
+				});
+			}
+		}).catch(error => {
 			return dispatch({
 				type: GET_USERS,
-				users: users,
-				inProgressGetUsers: false
+				users: [],
+				inProgressGetUsers: false,
+				error: {
+					status: true,
+					message: "" + error
+				}
 			});
-		}
-	}).catch(error => {
+		});
 		return dispatch({
 			type: GET_USERS,
 			users: [],
-			inProgressGetUsers: false,
-			error: {
-				status: true,
-				message: "" + error
-			}
+			inProgressGetUsers: true
 		});
-	});
-	return dispatch({
-		type: GET_USERS,
-		users: [],
-		inProgressGetUsers: true
-	});
+	}
 };
-export function closeErrorModal(dispatch) {
-	return dispatch({
-		type: CLOSE_ERROR_MODAL,
-		error: {}
-	});
+
+export function closeErrorModal() {
+	return function (dispatch) {
+		return dispatch({
+			type: CLOSE_ERROR_MODAL,
+			error: {}
+		});
+	}
 };

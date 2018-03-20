@@ -43,7 +43,7 @@ export default (state = {
 				tasksUpdateNeeded: action.tasksUpdateNeeded,
 				inProgressUpdateTask: action.inProgressUpdateTask,
 				error: action.error
-		};
+			};
 		case DELETE_TASK:
 			return {
 				...state,
@@ -55,104 +55,112 @@ export default (state = {
 			return state;
 	}
 }
-export function getTasksByHouseId(dispatch,houseID) {
-	let tasks = [];
-	let endpoint = _.replace(Endpoints.getTasksByHouseId, '%houseID%', houseID);
-	NetworkServices.requestData("GET", endpoint, "", true).then((response) => {
-		if (response.data) {
-			tasks = response.data;
+export function getTasksByHouseId(houseID) {
+	return function (dispatch) {
+		let tasks = [];
+		let endpoint = _.replace(Endpoints.getTasksByHouseId, '%houseID%', houseID);
+		NetworkServices.requestData("GET", endpoint, "", true).then((response) => {
+			if (response.data) {
+				tasks = response.data;
+				return dispatch({
+					type: GET_TASKS,
+					tasks: tasks,
+					inProgressGetTasks: false
+				});
+			}
+		}).catch(error => {
 			return dispatch({
 				type: GET_TASKS,
-				tasks: tasks,
-				inProgressGetTasks: false
+				tasks: [],
+				inProgressGetTasks: false,
+				error: {
+					status: true,
+					message: "" + error
+				}
 			});
-		}
-	}).catch(error => {
+		});
 		return dispatch({
 			type: GET_TASKS,
 			tasks: [],
-			inProgressGetTasks: false,
-			error: {
-				status: true,
-				message: "" + error
-			}
+			tasksUpdateNeeded: false,
+			inProgressGetTasks: true
 		});
-	});
-	return dispatch({
-		type: GET_TASKS,
-		tasks: [],
-		tasksUpdateNeeded: false,
-		inProgressGetTasks: true
-	});
+	}
 };
 
-export function addNewTask(dispatch, data) {
-	NetworkServices.requestData("POST", Endpoints.addNewTask, data, true).then((response) => {
+export function addNewTask(data) {
+	return function (dispatch) {
+		NetworkServices.requestData("POST", Endpoints.addNewTask, data, true).then((response) => {
+			return dispatch({
+				type: ADD_TASK,
+				tasksUpdateNeeded: true,
+				inProgressAddTask: false
+			});
+		}).catch(error => {
+			return dispatch({
+				type: ADD_TASK,
+				inProgressAddTask: false,
+				error: {
+					status: true,
+					message: "" + error
+				}
+			});
+		});
 		return dispatch({
 			type: ADD_TASK,
-			tasksUpdateNeeded: true,
-			inProgressAddTask: false
+			inProgressAddTask: true
 		});
-	}).catch(error => {
-		return dispatch({
-			type: ADD_TASK,
-			inProgressAddTask: false,
-			error: {
-				status: true,
-				message: "" + error
-			}
-		});
-	});
-	return dispatch({
-		type: ADD_TASK,
-		inProgressAddTask: true
-	});
+	}
 };
 
-export function updateTask(dispatch, data, taskID) {
-	let endpoint = _.replace(Endpoints.updateTask, '%taskID%', taskID);
-	NetworkServices.requestData("PUT", endpoint, data, true).then((response) => {
+export function updateTask(data, taskID) {
+	return function (dispatch) {
+		let endpoint = _.replace(Endpoints.updateTask, '%taskID%', taskID);
+		NetworkServices.requestData("PUT", endpoint, data, true).then((response) => {
+			return dispatch({
+				type: UPDATE_TASK,
+				tasksUpdateNeeded: true,
+				inProgressUpdateTask: false
+			});
+		}).catch(error => {
+			return dispatch({
+				type: UPDATE_TASK,
+				inProgressUpdateTask: false,
+				error: {
+					status: true,
+					message: "" + error
+				}
+			});
+		});
 		return dispatch({
 			type: UPDATE_TASK,
-			tasksUpdateNeeded: true,
-			inProgressUpdateTask: false
+			inProgressUpdateTask: true
 		});
-	}).catch(error => {
-		return dispatch({
-			type: UPDATE_TASK,
-			inProgressUpdateTask: false,
-			error: {
-				status: true,
-				message: "" + error
-			}
-		});
-	});
-	return dispatch({
-		type: UPDATE_TASK,
-		inProgressUpdateTask: true
-	});
+	}
 };
 
-export function deleteTaskById(dispatch, taskID) {
-	let endpoint = _.replace(Endpoints.deleteTaskById, '%taskID%', taskID);
-	NetworkServices.requestData("DELETE", endpoint, "", true).then((response) => {
+export function deleteTaskById(taskID) {
+	return function (dispatch) {
+		let endpoint = _.replace(Endpoints.deleteTaskById, '%taskID%', taskID);
+		NetworkServices.requestData("DELETE", endpoint, "", true).then((response) => {
+			return dispatch({
+				type: DELETE_TASK,
+				tasksUpdateNeeded: true,
+				inProgressDeleteTask: false
+			});
+		}).catch(error => {
+			return dispatch({
+				type: DELETE_TASK,
+				inProgressDeleteTask: false,
+				error: {
+					status: true,
+					message: "" + error
+				}
+			});
+		});
 		return dispatch({
 			type: DELETE_TASK,
-			tasksUpdateNeeded: true,
-			inProgressDeleteTask: false
+			inProgressDeleteTask: true
 		});
-	}).catch(error => {
-		return dispatch({
-			type: DELETE_TASK,
-			inProgressDeleteTask: false,
-			error: {
-				status: true,
-				message: "" + error
-			}
-		});
-	});
-	return dispatch({
-		type: DELETE_TASK,
-		inProgressDeleteTask: true
-	});
+	}
 };

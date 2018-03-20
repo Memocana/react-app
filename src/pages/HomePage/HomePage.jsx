@@ -1,16 +1,46 @@
 import React, { Component } from 'react';
+import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import * as taskReducer from '../../reducers/task';
-import * as userReducer from '../../reducers/user';
+import Loadable from 'react-loadable';
+import * as TaskReducerActions from '../../reducers/task';
+import * as UserReducerActions from '../../reducers/user';
 import HeaderMenu from '../../components/HeaderMenu';
-import UserList from '../../components/UserList';
-import TaskList from '../../components/TaskList';
-import GeneralModal from '../../components/GeneralModal';
+// import UserList from '../../components/UserList';
+// import TaskList from '../../components/TaskList';
+// import GeneralModal from '../../components/GeneralModal';
 import _ from 'lodash';
 
 import './HomePage.scss';
 import NewTaskButton from '../../components/NewTaskButton';
+
+function Loading(props) {
+  if (props.error) {
+    return <div>Error!</div>;
+  } else if (props.pastDelay) {
+    return <div>Loading...</div>;
+  } else {
+    return null;
+  }
+}
+
+const LoadableUserList = Loadable({
+  loader: () => import('../../components/UserList'),
+  loading: Loading,
+	delay: 100, // 0.1 seconds
+});
+
+const LoadableTaskList = Loadable({
+  loader: () => import('../../components/TaskList'),
+  loading: Loading,
+	delay: 100, // 0.1 seconds
+});
+
+const LoadableGeneralModal = Loadable({
+  loader: () => import('../../components/GeneralModal'),
+  loading: Loading,
+	delay: 100, // 0.1 seconds
+});
 
 class HomePage extends Component {
 
@@ -29,10 +59,10 @@ class HomePage extends Component {
 		} else {
 			let houseId = _.get(this.props, "user.houseId");
 			if (!_.get(this.props, 'inProgressGetUsers')) {
-				this.props.getUsersByHouseId(houseId);
+				this.props.userReducerActions.getUsersByHouseId(houseId);
 			}
 			if (!_.get(this.props, 'inProgressGetTasks')) {
-				this.props.getTasksByHouseId(houseId);
+				this.props.taskReducerActions.getTasksByHouseId(houseId);
 			}
 		}
 	}
@@ -40,7 +70,7 @@ class HomePage extends Component {
 	componentWillReceiveProps(nextProps) {
 		if (_.get(nextProps, 'tasksUpdateNeeded') && !_.get(nextProps, 'inProgressGetTasks')) {
 			let houseId = _.get(nextProps, "user.houseId");
-			this.props.getTasksByHouseId(houseId);
+			this.props.taskReducerActions.getTasksByHouseId(houseId);
 			this.setState({
 				showNewTaskModal: false,
 				taskDescription: ''
@@ -51,7 +81,7 @@ class HomePage extends Component {
 	/********************************/
 
 	onClickTaskDelete = (taskId) => {
-		this.props.deleteTaskById(taskId);
+		this.props.taskReducerActions.deleteTaskById(taskId);
 	}
 
 	handleChange = (name, value) => {
@@ -61,7 +91,7 @@ class HomePage extends Component {
 	}
 
 	addNewTask = () => {
-		this.props.addNewTask({
+		this.props.taskReducerActions.addNewTask({
 			houseId: _.get(this.props, "user.houseId"),
 			description: this.state.taskDescription
 		})
@@ -85,13 +115,13 @@ class HomePage extends Component {
 
 				<div className="page-content">
 
-					<UserList
+					<LoadableUserList
 						users={this.props.users}
 						tasks={this.props.tasks}
 						loadingState={this.props.inProgressGetUsers}
 					/>
 
-					<TaskList
+					<LoadableTaskList
 						users={this.props.users}
 						tasks={this.props.tasks}
 						onTaskClick={() => _.noop}
@@ -109,11 +139,11 @@ class HomePage extends Component {
 
 				</div>
 
-				<GeneralModal
+				<LoadableGeneralModal
 					show={_.get(this.props, 'error.status') ? true : false}
 					title={"Hata Oluştu !"}
 					body={_.get(this.props, 'error.message')}
-					handleClose={() => this.props.closeErrorModal()} />
+					handleClose={() => this.props.userReducerActions.closeErrorModal()} />
 			</div>
 		);
 	}
@@ -133,21 +163,8 @@ const mapStateToProps = (state) => {
 };
 const mapDispatchToProps = (dispatch) => {
 	return {
-		getUsersByHouseId: (houseId) => {
-			userReducer.getUsersByHouseId(dispatch, houseId);
-		},
-		getTasksByHouseId: (houseId) => {
-			taskReducer.getTasksByHouseId(dispatch, houseId);
-		},
-		addNewTask: (data) => {
-			taskReducer.addNewTask(dispatch, data);
-		},
-		deleteTaskById: (taskId) => {
-			taskReducer.deleteTaskById(dispatch, taskId);
-		},
-		closeErrorModal: () => {
-			userReducer.closeErrorModal(dispatch);
-		}
+		userReducerActions: bindActionCreators(UserReducerActions, dispatch),
+		taskReducerActions: bindActionCreators(TaskReducerActions, dispatch)
 	};
 };
 

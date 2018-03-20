@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
+import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import * as taskReducer from '../../reducers/task';
-import * as userReducer from '../../reducers/user';
+import * as TaskReducerActions from '../../reducers/task';
+import * as UserReducerActions from '../../reducers/user';
 import HeaderMenu from '../../components/HeaderMenu';
 import TaskList from '../../components/TaskList';
 import Roulette from '../../components/Roulette';
@@ -25,10 +26,10 @@ class RoulettePage extends Component {
 		}else {
 			let houseId = _.get(this.props, "user.houseId");
 			if (_.isEmpty(this.props.users)) {
-				this.props.getUsersByHouseId(houseId);
+				this.props.userReducerActions.getUsersByHouseId(houseId);
 			}
 			if (_.isEmpty(this.props.tasks)) {
-				this.props.getTasksByHouseId(houseId);
+				this.props.taskReducerActions.getTasksByHouseId(houseId);
 			}
 		}
 	}
@@ -62,7 +63,7 @@ class RoulettePage extends Component {
 			user : this.props.users[decisions.user]
 		};
 
-		this.props.updateTask({"done": false, "userId": selected.user.id}, this.state.selectedTask.id);
+		this.props.taskReducerActions.updateTask({"done": false, "userId": selected.user.id}, this.state.selectedTask.id);
 
 		document.getElementById("roulette").classList.remove("reset");
 		document.getElementById("roulette").classList.add("active");
@@ -75,7 +76,7 @@ class RoulettePage extends Component {
 				modalBody: "İhale " + selected.user.firstname + " " + selected.user.lastname + " adlı kişiye kalmıştır.",
 				selectedTask:null
 			});
-			this.props.getTasksByHouseId(this.props.user.houseId);
+			this.props.taskReducerActions.getTasksByHouseId(this.props.user.houseId);
 			document.getElementById("roulette").classList.remove("active");
 			document.getElementById("roulette").classList.add("reset");
 			document.getElementById("roulette").removeAttribute("style");
@@ -129,15 +130,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
 	return {
-		getUsersByHouseId: (houseId) => {
-			userReducer.getUsersByHouseId(dispatch, houseId);
-		},
-		getTasksByHouseId: (houseId) => {
-			taskReducer.getTasksByHouseId(dispatch, houseId);
-		},
-		updateTask: (data, taskID) => {
-			taskReducer.updateTask(dispatch, data, taskID);
-		}
+		userReducerActions: bindActionCreators(UserReducerActions, dispatch),
+		taskReducerActions: bindActionCreators(TaskReducerActions, dispatch)
 	};
 };
 

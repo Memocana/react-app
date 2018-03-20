@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
+import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import * as loginReducer from '../../reducers/login';
+import * as LoginReducerActions from '../../reducers/login';
 import Login from '../../components/Login'
 import GeneralModal from '../../components/GeneralModal'
 import _ from 'lodash';
@@ -21,16 +22,16 @@ class LoginPage extends Component {
 	/* REACT LIFECYCLE FUNCTIONS */
 
 	componentWillReceiveProps(nextProps) {
-		if (_.get(JSON.parse(localStorage.getItem('user')), "jwt")) {
-			this.props.history.push('./home')
-		}
+		// if (_.get(JSON.parse(localStorage.getItem('user')), "jwt")) {
+		// 	this.props.history.push('./home')
+		// }
 	}
 
 	componentWillMount() {
 		localStorage.removeItem('user');
 		if (!this.props.allHouses || this.props.allHouses.length === 0) {
 			this.setState({ loadingGetHouses: true })
-			this.props.getAllHouses(true);
+			this.props.loginReducerActions.getAllHouses(true);
 		}
 	}
 
@@ -40,7 +41,13 @@ class LoginPage extends Component {
 		const { name, surName, selectedHome } = this.state;
 		this.setState({ loadingLogin: true, validation: true })
 		if (name && surName && selectedHome) {
-			this.props.registerAndLogin({ firstname: name, lastname: surName, houseId: Number(selectedHome) });
+			this.props.loginReducerActions.registerAndLogin({ firstname: name, lastname: surName, houseId: Number(selectedHome) })
+				.then(() => {
+					this.props.history.push('./home')
+				})
+				.catch(error => {
+					console.log("error");
+				});
 		}
 	}
 
@@ -52,6 +59,9 @@ class LoginPage extends Component {
 	}
 
 	render() {
+		// TODO: test for error bounndary
+		// let variable = null;
+		// variable.toString();
 		return (
 			<div className="page-container">
 				<Login
@@ -66,7 +76,7 @@ class LoginPage extends Component {
 
 				<GeneralModal show={this.props.error.status ? this.props.error.status : false}
 					title={"Hata Oluştu !"} body={this.props.error.message}
-					handleClose={() => this.props.closeErrorModal()} />
+					handleClose={() => this.props.loginReducerActions.closeErrorModal()} />
 			</div>);
 	}
 }
@@ -83,18 +93,7 @@ const mapStateToProps = (state) => {
 };
 const mapDispatchToProps = (dispatch) => {
 	return {
-		testStatus: (data) => {
-			loginReducer.testStatus(dispatch, data);
-		},
-		getAllHouses: () => {
-			loginReducer.getAllHouses(dispatch);
-		},
-		registerAndLogin: (user) => {
-			loginReducer.registerAndLogin(dispatch, user);
-		},
-		closeErrorModal: () => {
-			loginReducer.closeErrorModal(dispatch);
-		}
+		loginReducerActions: bindActionCreators(LoginReducerActions, dispatch)
 	};
 };
 
