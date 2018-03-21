@@ -1,7 +1,7 @@
 import React, { PureComponent } from "react";
 import Child from "../../components/Child.jsx";
 
-class Home extends PureComponent {
+class HomePage extends PureComponent {
 	/*REACT LIFECYCLE FUNCTIONS*/
 	constructor(props) {
 		super(props);
@@ -48,4 +48,4 @@ class Home extends PureComponent {
 		);
 	}
 }
-export default Home;
+export default HomePage;

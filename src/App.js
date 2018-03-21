@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Switch, Route } from "react-router-dom";
-import HomePage from "./pages/Home/Home.jsx";
-import LoginPage from "./pages/Login/Login.jsx";
+import HomePage from "./pages/Home/HomePage.jsx";
+import LoginPage from "./pages/Login/LoginPage.jsx";
 import WildCard from "./pages/WildCard/WildCard.jsx";
 
 class App extends Component {
