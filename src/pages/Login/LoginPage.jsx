@@ -1,6 +1,9 @@
 import React, { Component } from "react";
+import {connect} from "react-redux";
+import {bindActionCreators} from "redux";
 import { withRouter } from "react-router-dom";
 import Login from "../../components/Login"
+import * as loginActions from "../../reducers/login";
 import './LoginPage.scss';
 
 const houses=[
@@ -32,7 +35,13 @@ class LoginPage extends Component {
 	}
 	login = () => {
 		console.log("Login triggered");
-		this.setState({validation:true});
+		const {name, lastName,selectedHome} = this.state;
+		if(name && lastName && selectedHome) {
+			this.props.loginActionCreators.registerAndLogin({firstname:name,lastname:lastName,houseId:Number(selectedHome)}).then(()=>{
+				this.props.history.push('/home');
+			});
+		}
+
 	}
 
 	render() {
@@ -52,5 +61,20 @@ class LoginPage extends Component {
 		);
 	}
 }
+const mapDispatchToProps = (dispatch) => {
+	return {
+		loginActionCreators: bindActionCreators(loginActions,dispatch),
+	}
+};
+const mapStateToProps = (state)=> {
+	return {
+		user:state.login.user,
+		error:state.login.error,
+		inProgressLogin: state.login.inProgressLogin
+	}
+}
 
-export default withRouter(LoginPage);
+
+export default withRouter(
+	connect(mapStateToProps,mapDispatchToProps)(LoginPage)
+);
