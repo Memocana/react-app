@@ -1,5 +1,8 @@
 import React, { PureComponent } from "react";
-import Child from "../../components/Child.jsx";
+import UserList from "../../components/UserList";
+import TaskList from "../../components/TaskList";
+
+import './HomePage.scss';
 
 class HomePage extends PureComponent {
 	/*REACT LIFECYCLE FUNCTIONS*/
@@ -20,30 +23,15 @@ class HomePage extends PureComponent {
 		console.log("componentDidMount called");
 	}
 
-	increaseCounter = e => {
-		this.setState({
-			counter: this.state.counter + 1
-		});
-	};
-
-	reduceCounter = () => {
-		this.setState({
-			counter: this.state.counter - 1
-		});
-	};
-
 	render() {
 		console.log("current state: ", this.state);
 		return (
-			<div>
-				<h1>Öğrenci Evi</h1>
-				<button onClick={e => this.increaseCounter(e)}>
-					Öğrenci Sayısını Arttır
-				</button>
-				<Child
-					counter={this.state.counter}
-					reduceCounter={this.reduceCounter}
-				/>
+			<div className="page-container">
+				<h1>Öğrenci Evi -- Home Page</h1>
+				<div className="page-content">
+					<UserList />
+					<TaskList />
+				</div>
 			</div>
 		);
 	}
