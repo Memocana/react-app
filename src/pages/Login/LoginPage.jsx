@@ -31,7 +31,13 @@ class LoginPage extends Component {
 
 	componentWillMount() {
 		if (!this.props.houses.length) {
-			this.props.loginActionCreators.getAllHouses();
+			this.props.loginActionCreators.getAllHouses()
+			.then(()=> {
+				console.log("houses retrieved")
+			})
+			.catch(error => {
+				alert("Error", error);
+			});;
 		}
 	}
 
@@ -48,7 +54,11 @@ class LoginPage extends Component {
 		if (name && lastName && selectedHome) {
 			this.props.loginActionCreators.registerAndLogin({ firstname: name, lastname: lastName, houseId: Number(selectedHome) })
 				.then(() => {
+					console.log("login success");
 					this.props.history.push('/home');
+				})
+				.catch(error => {
+					alert("Error", error);
 				});
 		}
 
