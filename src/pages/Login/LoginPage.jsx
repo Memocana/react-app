@@ -1,51 +1,62 @@
 import React, { Component } from "react";
-import {connect} from "react-redux";
-import {bindActionCreators} from "redux";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
 import { withRouter } from "react-router-dom";
 import Login from "../../components/Login"
 import * as loginActions from "../../reducers/login";
 import './LoginPage.scss';
 
-const houses=[
-	{
-		id:1,
-		name:"Accenture"
-	},
-	{
-		id:2,
-		name:"Industry x.0"
-	},
-	{
-		id:3,
-		name:"COE"
-	}
-];
+// const houses = [
+// 	{
+// 		id: 1,
+// 		name: "Accenture"
+// 	},
+// 	{
+// 		id: 2,
+// 		name: "Industry x.0"
+// 	},
+// 	{
+// 		id: 3,
+// 		name: "COE"
+// 	}
+// ];
+
 class LoginPage extends Component {
-  state = {
-    name: '',
-	lastName: '',
-    selectedHome: "",
-    validation: false
-  }
-	handleChange=(name, value) => {
-		let newState =  {...this.state};
-		newState.validation=false;
-		newState[name]=value;
-		this.setState({...newState});
+	state = {
+		name: '',
+		lastName: '',
+		selectedHome: "",
+		validation: false
 	}
+
+	componentWillMount() {
+		if (!this.props.houses.length) {
+			this.props.loginActionCreators.getAllHouses();
+		}
+	}
+
+	handleChange = (name, value) => {
+		let newState = { ...this.state };
+		newState.validation = false;
+		newState[name] = value;
+		this.setState({ ...newState });
+	}
+
 	login = () => {
 		console.log("Login triggered");
-		const {name, lastName,selectedHome} = this.state;
-		if(name && lastName && selectedHome) {
-			this.props.loginActionCreators.registerAndLogin({firstname:name,lastname:lastName,houseId:Number(selectedHome)}).then(()=>{
-				this.props.history.push('/home');
-			});
+		const { name, lastName, selectedHome } = this.state;
+		if (name && lastName && selectedHome) {
+			this.props.loginActionCreators.registerAndLogin({ firstname: name, lastname: lastName, houseId: Number(selectedHome) })
+				.then(() => {
+					this.props.history.push('/home');
+				});
 		}
 
 	}
 
 	render() {
-		const {name, lastName, validation, selectedHome }=this.state;
+		const { name, lastName, validation, selectedHome } = this.state;
+		const { houses } = this.props;
 		return (
 			<div className={"page-container"}>
 				<Login
@@ -63,18 +74,18 @@ class LoginPage extends Component {
 }
 const mapDispatchToProps = (dispatch) => {
 	return {
-		loginActionCreators: bindActionCreators(loginActions,dispatch),
+		loginActionCreators: bindActionCreators(loginActions, dispatch),
 	}
 };
-const mapStateToProps = (state)=> {
+const mapStateToProps = (state) => {
 	return {
-		user:state.login.user,
-		error:state.login.error,
+		user: state.login.user,
+		houses: state.login.houses,
 		inProgressLogin: state.login.inProgressLogin
 	}
 }
 
 
 export default withRouter(
-	connect(mapStateToProps,mapDispatchToProps)(LoginPage)
+	connect(mapStateToProps, mapDispatchToProps)(LoginPage)
 );
