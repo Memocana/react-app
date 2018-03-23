@@ -1,6 +1,8 @@
 import React from 'react';
+import _ from 'lodash';
 
 const TaskList = (props) => {
+  const { tasks, users } = this.props;
   return (
     <div>
       <div className="title-with-lines">
@@ -9,15 +11,28 @@ const TaskList = (props) => {
         <div className="line"></div>
       </div>
       <div className="job-list">
-        <div>
-          <div className="job-item">İş 1</div>
+
+      {_(tasks).map((t, i) => {
+        let user = _.find(users, { id: t.userId });
+        return <div
+          key={i}
+          className={"job-container "}
+          >
+          <div className="job-item">{t.description}</div>
           <div style={{ display: "flex" }}>
             <div className="assignee">
-              Assignee
-               </div>
-            <div className="delete-button">sil</div>
+              {
+                t.userId
+                  ? _.get(user, "firstname") + " " + _.get(user, "lastname")
+                  : "Kimse atanmadı"
+              }
+              </div>
+            <div className="delete-button" onClick={(e) => props.onClickTaskDelete(t.id)}>sil</div>
           </div>
         </div>
+      })}
+
+
       </div>
     </div>
   )

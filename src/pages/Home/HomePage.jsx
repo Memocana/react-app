@@ -50,17 +50,32 @@ class HomePage extends PureComponent {
 		console.log("componentDidMount called");
 	}
 
+	onClickTaskDelete = (id) => {
+		this.props.taskActionCreators.deleteTaskById(id)
+			.then(response => {
+
+			})
+			.catch(error => {
+
+			});
+	}
+
 	render() {
 		console.log("current state: ", this.state);
+		const { users, tasks } = this.props;
 		return (
 			<div className="page-container">
 				<h1>Öğrenci Evi -- Home Page</h1>
 				<div className="page-content">
 					<UserList 
-						users={this.props.users}
-						tasks={this.props.tasks}
+						users={users}
+						tasks={tasks}
 					/>
-					<TaskList />
+					<TaskList 
+						users={users}
+						tasks={tasks}
+						onClickTaskDelete={this.onClickTaskDelete}
+					/>
 				</div>
 			</div>
 		);
