@@ -2,7 +2,7 @@ import React from 'react';
 import _ from 'lodash';
 
 const TaskList = (props) => {
-  const { tasks, users } = this.props;
+  const { tasks, users } = props;
   return (
     <div>
       <div className="title-with-lines">
@@ -12,26 +12,27 @@ const TaskList = (props) => {
       </div>
       <div className="job-list">
 
-      {_(tasks).map((t, i) => {
-        let user = _.find(users, { id: t.userId });
-        return <div
-          key={i}
-          className={"job-container "}
-          >
-          <div className="job-item">{t.description}</div>
-          <div style={{ display: "flex" }}>
-            <div className="assignee">
-              {
-                t.userId
-                  ? _.get(user, "firstname") + " " + _.get(user, "lastname")
-                  : "Kimse atanmadı"
-              }
+        {
+          _(tasks).map((t, i) => {
+            let user = _.find(users, { id: t.userId });
+            return <div
+              key={i}
+              className={"job-container "}
+            >
+              <div className="job-item">{t.description}</div>
+              <div style={{ display: "flex" }}>
+                <div className="assignee">
+                  {
+                    t.userId
+                      ? _.get(user, "firstname") + " " + _.get(user, "lastname")
+                      : "Kimse atanmadı"
+                  }
+                </div>
+                <div className="delete-button" onClick={(e) => props.onClickTaskDelete(t.id)}>sil</div>
               </div>
-            <div className="delete-button" onClick={(e) => props.onClickTaskDelete(t.id)}>sil</div>
-          </div>
-        </div>
-      })}
-
+            </div>
+          }).value()
+        }
 
       </div>
     </div>

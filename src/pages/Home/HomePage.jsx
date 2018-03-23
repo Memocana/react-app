@@ -23,26 +23,26 @@ class HomePage extends PureComponent {
 
 	componentWillMount() {
 		console.log("componentWillMount called");
-		if(!this.props.users.length) {
+		if (!this.props.users.length) {
 			let houseId = this.props.user.houseId;
 			this.props.userActionCreators.getUsers(houseId)
-			.then(response => {
-				console.log(response);
-			})
-			.catch(error => {
-				alert("Error: ", error)
-			})
+				.then(response => {
+					console.log(response);
+				})
+				.catch(error => {
+					alert("Error: ", error)
+				})
 		}
 
-		if(!this.props.tasks.length) {
+		if (!this.props.tasks.length) {
 			let houseId = this.props.user.houseId;
 			this.props.taskActionCreators.getTasks(houseId)
-			.then(response => {
-				console.log(response);
-			})
-			.catch(error => {
-				alert("Error: ", error)
-			})
+				.then(response => {
+					console.log(response);
+				})
+				.catch(error => {
+					alert("Error: ", error)
+				})
 		}
 	}
 
@@ -53,7 +53,8 @@ class HomePage extends PureComponent {
 	onClickTaskDelete = (id) => {
 		this.props.taskActionCreators.deleteTaskById(id)
 			.then(response => {
-
+				let houseId = this.props.user.houseId;
+				this.props.taskActionCreators.getTasks(houseId);
 			})
 			.catch(error => {
 
@@ -67,11 +68,11 @@ class HomePage extends PureComponent {
 			<div className="page-container">
 				<h1>Öğrenci Evi -- Home Page</h1>
 				<div className="page-content">
-					<UserList 
+					<UserList
 						users={users}
 						tasks={tasks}
 					/>
-					<TaskList 
+					<TaskList
 						users={users}
 						tasks={tasks}
 						onClickTaskDelete={this.onClickTaskDelete}
