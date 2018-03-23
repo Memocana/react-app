@@ -6,9 +6,10 @@ import * as UserActions from "../../reducers/user";
 import * as TaskActions from "../../reducers/task";
 import UserList from "../../components/UserList";
 import TaskList from "../../components/TaskList";
-
+import _ from "lodash";
 
 import './HomePage.scss';
+import NewTaskModal from "../../components/NewTaskModal";
 
 class HomePage extends PureComponent {
 	/*REACT LIFECYCLE FUNCTIONS*/
@@ -17,7 +18,9 @@ class HomePage extends PureComponent {
 		console.log("constructor called");
 		this.state = {
 			test: true,
-			counter: 1
+			counter: 1,
+			show: false,
+			taskDescription: ""
 		};
 	}
 
@@ -61,6 +64,31 @@ class HomePage extends PureComponent {
 			});
 	}
 
+	handleChange = (name, value) => {
+		let newState = { ...this.state };
+		newState[name] = value;
+		this.setState({ ...newState });
+	}
+
+	addNewTask = () => {
+		this.props.taskActionCreators.addNewTask({
+			houseId: _.get(this.props, "user.houseId"),
+			description: this.state.taskDescription
+		})
+			.then(() => {
+				let houseId = this.props.user.houseId;
+				this.props.taskActionCreators.getTasks(houseId);
+				this.setState({ show: false, taskDescription: "" });
+			})
+			.catch(error => {
+				alert("Error: ", error)
+			})
+	}
+
+	handleClose = () => {
+		this.setState({ show: false });
+	}
+
 	render() {
 		console.log("current state: ", this.state);
 		const { users, tasks } = this.props;
@@ -77,6 +105,20 @@ class HomePage extends PureComponent {
 						tasks={tasks}
 						onClickTaskDelete={this.onClickTaskDelete}
 					/>
+					<div className="add-new-button-container">
+						<button
+							className="add-new-button"
+							onClick={() => this.handleChange("show", true)}>+ Yeni İş</button>
+						<NewTaskModal
+							show={this.state.show}
+							title={'Yeni İş'}
+							taskDescription={this.state.taskDescription}
+							handleChange={this.handleChange}
+							addNewTask={this.addNewTask}
+							handleClose={this.handleClose}
+						/>
+					</div>
+
 				</div>
 			</div>
 		);

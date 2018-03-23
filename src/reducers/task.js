@@ -5,6 +5,7 @@ import * as Endpoints from "../const/endpoints";
 import _ from 'lodash';
 
 const GET_TASKS = "reducer/GET_TASKS";
+const ADD_TASK = "reducer/ADD_TASK";
 const DELETE_TASK = "reducer/DELETE_TASK";
 
 export default (state = {
@@ -16,10 +17,11 @@ export default (state = {
 				...state,
 				tasks: action.tasks
 			}
-		case DELETE_TASK:
+    case DELETE_TASK:
+    case ADD_TASK:
 			return {
 				...state
-			}
+      }
 		default:
 			return state;
 	}
@@ -40,6 +42,21 @@ export function getTasks(houseID) {
 			});
 	}
 }
+
+
+export function addNewTask(data) {
+  return function (dispatch) {
+      return requestData("POST", Endpoints.addNewTask, data, true).then((response) => {
+          dispatch({
+              type: ADD_TASK
+          });
+          return;
+      }).catch(error => {
+           throw error;
+      });
+  }
+};
+
 
 export function deleteTaskById(taskID) {
 	return (dispatch) => {

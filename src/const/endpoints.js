@@ -4,3 +4,4 @@ export const registerAndLogin = "/login";
 export const getUsersByHouseId = "/houses/%houseID%/users";
 export const getTasksByHouseId = "/houses/%houseID%/tasks";
 export const deleteTaskById = "/tasks/%taskID%";
+export const addNewTask = "/tasks";
