@@ -1,51 +1,20 @@
-import React, { PureComponent } from "react";
-import Child from "./components/Child.jsx";
+import React, { Component } from "react";
+import {Switch, Route} from "react-router-dom";
+import HomePage from "./pages/HomePage/HomePage.js";
+import LoginPage from "./pages/LoginPage/LoginPage.js";
 
-class App extends PureComponent {
-	/*REACT LIFECYCLE FUNCTIONS*/
-	constructor(props) {
-		super(props);
-		console.log("constructor called");
-		this.state = {
-			test: true,
-			counter: 1
-		};
-	}
-
-	componentWillMount() {
-		console.log("componentWillMount called");
-	}
-
-	componentDidMount() {
-		console.log("componentDidMount called");
-	}
-
-	increaseCounter = e => {
-		this.setState({
-			counter: this.state.counter + 1
-		});
-	};
-
-	reduceCounter = () => {
-		this.setState({
-			counter: this.state.counter - 1
-		});
-	};
-
+class App extends Component { 
 	render() {
-		console.log("current state: ", this.state);
-		return (
-			<div>
-				<h1>Öğrenci Evi</h1>
-				<button onClick={e => this.increaseCounter(e)}>
-					Öğrenci Sayısını Arttır
-				</button>
-				<Child
-					counter={this.state.counter}
-					reduceCounter={this.reduceCounter}
-				/>
-			</div>
+		return(
+			<Switch>
+				<Route exact path="/" component={LoginPage}/>
+				<Route exact path="/home" component={HomePage}/>
+				<Route path="*" component={LoginPage}/>
+			</Switch>
 		);
 	}
 }
+
+
+
 export default App;
